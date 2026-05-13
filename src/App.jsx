@@ -11,7 +11,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
-    <div className="relative min-h-screen cursor-none overflow-x-hidden">
+    <div className="relative min-h-screen lg:cursor-none overflow-x-hidden selection:bg-primary/30">
       <GeometricBackground />
       <Navbar />
       <main>

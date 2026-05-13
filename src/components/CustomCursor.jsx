@@ -2,14 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const CustomCursor = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if device is touch-based
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const handleMouseMove = (e) => {
       setMousePos({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
     };
 
     const handleMouseOver = (e) => {
@@ -21,42 +27,39 @@ const CustomCursor = () => {
       }
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
-
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseover', handleMouseOver);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mouseenter', handleMouseEnter);
     
     return () => {
+      window.removeEventListener('resize', checkMobile);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseenter', handleMouseEnter);
     };
-  }, [isVisible]);
+  }, []);
 
-  if (!isVisible) return null;
+  // On mobile/touch devices, we return null to let the system handle the cursor
+  if (isMobile) return null;
 
   return (
-    <div className="hidden lg:block"> {/* Only show on desktop as intended for high-end feel */}
-      {/* Outer Ring */}
+    <div className="fixed inset-0 pointer-events-none z-[99999]">
+      {/* High-visibility Glow Ring */}
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 rounded-full border-2 border-primary pointer-events-none z-[9999] shadow-[0_0_15px_rgba(46,91,255,0.3)]"
+        className="fixed top-0 left-0 w-12 h-12 rounded-full border-2 border-primary/60 shadow-[0_0_20px_rgba(46,91,255,0.4)]"
         animate={{
-          x: mousePos.x - 20,
-          y: mousePos.y - 20,
-          scale: isHovering ? 1.5 : 1,
+          x: mousePos.x - 24,
+          y: mousePos.y - 24,
+          scale: isHovering ? 1.4 : 1,
+          opacity: 1
         }}
-        transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.5 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 250, mass: 0.5 }}
       />
-      {/* Inner Dot */}
+      
+      {/* Precise Center Core */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-primary pointer-events-none z-[9999] shadow-[0_0_10px_rgba(46,91,255,0.5)]"
+        className="fixed top-0 left-0 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(46,91,255,0.8)]"
         animate={{
-          x: mousePos.x - 4,
-          y: mousePos.y - 4,
+          x: mousePos.x - 5,
+          y: mousePos.y - 5,
           scale: isHovering ? 0 : 1
         }}
         transition={{ type: 'spring', damping: 20, stiffness: 400, mass: 0.2 }}
