@@ -7,7 +7,6 @@ const CustomCursor = () => {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Use requestAnimationFrame for smoother updates in production
       requestAnimationFrame(() => {
         setMousePos({ x: e.clientX, y: e.clientY });
       });
@@ -33,14 +32,14 @@ const CustomCursor = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[999999] overflow-visible">
-      {/* Outer Glow Ring */}
+      {/* Outer Glow Ring - Scaled down for elegance */}
       <motion.div
-        className="fixed top-0 left-0 w-12 h-12 rounded-full border-2 border-primary shadow-[0_0_25px_rgba(46,91,255,0.6)]"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-primary shadow-[0_0_15px_rgba(46,91,255,0.4)]"
         style={{
           left: 0,
           top: 0,
-          translateX: mousePos.x - 24,
-          translateY: mousePos.y - 24,
+          translateX: mousePos.x - 16,
+          translateY: mousePos.y - 16,
         }}
         animate={{
           scale: isHovering ? 1.5 : 1,
@@ -48,14 +47,14 @@ const CustomCursor = () => {
         transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.5 }}
       />
       
-      {/* Precise Center Core */}
+      {/* Precise Center Core - Scaled down */}
       <motion.div
-        className="fixed top-0 left-0 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_rgba(46,91,255,1)]"
+        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(46,91,255,0.8)]"
         style={{
           left: 0,
           top: 0,
-          translateX: mousePos.x - 5,
-          translateY: mousePos.y - 5,
+          translateX: mousePos.x - 3,
+          translateY: mousePos.y - 3,
         }}
         animate={{
           scale: isHovering ? 0 : 1,
